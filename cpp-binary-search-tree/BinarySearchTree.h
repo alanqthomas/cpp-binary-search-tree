@@ -22,7 +22,7 @@ class TreeNode
 		}
 
 		void right(TreeNode *node) {
-_pRight = node;
+			_pRight = node;
 		}
 
 	public:
@@ -54,6 +54,27 @@ _pRight = node;
 
 		void data(const DataType& newData) {
 			_data = newData;
+		}
+
+		bool find(const DataType& value, void(*foundNode)(const DataType&)) {
+			if (value == this->data()) {
+				foundNode(this->data());
+				return true;
+			}
+			else if (value < this->data()) {
+				if (_pLeft == NULL)
+					return false;
+				else
+					return _pLeft->find(value, foundNode);
+			}
+			else if (value > this->data()) {
+				if (_pRight == NULL)
+					return false;
+				else
+					return _pRight->find(value, foundNode);
+			}
+
+			return false;
 		}
 };
 
@@ -101,13 +122,61 @@ public:
 	}
 
 	bool find(const DataType &searchItem, void(*foundNode)(const DataType&)) {
-		std::cout << "Find not implemented!\n";
-		return false;
+		if (_root == NULL)
+			return false;
+		else
+			return _root->find(searchItem, foundNode);
+	}
+	
+	bool erase(const DataType &deleteItem) {
+		DataType data = _root->data();
+		_root = eraseRecursive(_root, deleteItem);
+
+		bool erased = data == _root->data();
+
+		if (erased)
+			_size--;
+
+		return erased;
 	}
 
-	bool erase(const DataType &deleteItem) {
-		std::cout << "Erase not implemented!\n";
-		return false;
+	TreeNode<DataType>* eraseRecursive(TreeNode<DataType>* root, const DataType &deleteItem) {
+		if (root == NULL)
+			return root;
+
+		if (deleteItem < root->data()) {
+			root->left(eraseRecursive(root->left(), deleteItem));
+		}
+		else if (deleteItem > root->data()) {
+			root->right(eraseRecursive(root->right(), deleteItem));
+		}
+		else {
+			if (root->left() == NULL) {
+				TreeNode<DataType>* child = root->right();
+				delete root;
+				return child;
+			}
+			else if (root->right() == NULL) {
+				TreeNode<DataType>* child = root->left();
+				delete root;
+				return child;
+			}
+
+			TreeNode<DataType>* child = minNode(root->right());
+
+			root->data(child->data());
+
+			root->right(eraseRecursive(root->right(), child->data()));
+		}
+	}
+
+	TreeNode<DataType>* minNode(TreeNode<DataType>* root) {
+		TreeNode<DataType>* cursor = root;
+
+		while (cursor->left() != NULL)
+			cursor = cursor->left();
+
+		return cursor;
 	}
 
 	void insert(const DataType &newItem) {
@@ -118,6 +187,8 @@ public:
 		else {
 			insertRecursive(_root, newItem);
 		}
+
+		_size++;
 	}
 
 	void insert(const DataType &newItem,
@@ -130,7 +201,7 @@ public:
 			insertRecursive(_root, newItem, duplicateItemFound);
 		}
 
-		std::cout << "Insert not implemented!\n";
+		_size++;
 	}
 
 	TreeNode<DataType>* insertRecursive(TreeNode<DataType>* root, const DataType &newItem) {
