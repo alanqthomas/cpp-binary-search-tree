@@ -31,6 +31,8 @@ int main() {
 
 	std::cout << "Found=" << found << ".\n";
 
+	tree.debug(std::cout);
+
 	//tree.traverse(&PrintNode);
 
 	std::getchar();

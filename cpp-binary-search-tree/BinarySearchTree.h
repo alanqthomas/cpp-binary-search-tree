@@ -2,6 +2,7 @@
 #define BINARYSEARCHTREE_H_
 
 #include <iostream>
+#include <iomanip>
 
 // Forward declaration of the template class BinarySearchTree
 template<class DataType>
@@ -76,6 +77,20 @@ class TreeNode
 
 			return false;
 		}
+
+		void debug(std::ostream &out) {
+			out << "address=[" << this << "]" << std::endl;
+			out << "data=" << _data << std::endl;
+			out << "left=[" << _pLeft << "]" << std::endl;
+			out << "right=[" << _pRight << "]" << std::endl;
+			out << "=========================" << std::endl;
+
+			if (_pLeft != NULL)
+				_pLeft->debug(out);
+
+			if (_pRight != NULL)
+				_pRight->debug(out);			
+		}
 };
 
 template<class DataType>
@@ -118,8 +133,14 @@ public:
 	}
 
 	void debug(std::ostream &out) const {
-		std::cout << "Debug not implemented!\n";
-	}
+		out << std::endl << std::endl << "=========================" << std::endl;
+		out << "*******START DEBUG*******" << std::endl;		
+		out << "=========================" << std::endl << std::endl;
+		_root->debug(out);
+		out << std::endl << "=========================" << std::endl;
+		out << "********END DEBUG********" << std::endl;
+		out << "=========================" << std::endl << std::endl;
+	}	
 
 	bool find(const DataType &searchItem, void(*foundNode)(const DataType&)) {
 		if (_root == NULL)
