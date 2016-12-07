@@ -6,7 +6,7 @@ void PrintNode(DataType& data) {
 	std::cout << " " << data << " ";
 }
 
-int main() {
+int main2() {
 	std::cout << "Hello, World!.\n";
 
 	BinarySearchTree<int> tree;
